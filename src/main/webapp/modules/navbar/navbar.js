@@ -1,8 +1,8 @@
 
-  $("#signin_form").submit(function(event) {
+  function signIn(){
     var params = {
-        "email"      : $('#email'),
-        "password"   : $('#Password')
+        "email"      : $('#email').val(),
+        "password"   : $('#Password').val()
     };  
     console.log("params inside signin");
     console.log(params);
@@ -21,12 +21,10 @@
         error : function (jqXHR, textStatus, errorThrown) {
             console.log("error in sign in");
         }
-    });   
-     
-   });
-  
-
-
+    });  
+      
+      
+  }
 
 
 

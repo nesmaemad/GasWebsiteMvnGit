@@ -5,10 +5,12 @@
  */
 package main.java.handlers;
 
+import java.io.BufferedReader;
 import java.sql.Connection;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import main.java.utilities.DBConnection;
+import org.json.JSONObject;
 
 /**
  *
@@ -32,8 +34,21 @@ public class SignInHandler {
     }
     
     public boolean signIn(HttpServletRequest request){
-        String email    = request.getParameter("email");
-        String password = request.getParameter("password");
+        System.out.println("inside signIn in signInHandler");
+        StringBuilder buffer = new StringBuilder();
+        BufferedReader reader;
+        try {
+            reader = request.getReader();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+            String data = buffer.toString();
+            JSONObject params = new JSONObject(data);
+            System.out.println(params.toString());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return true;
     }
     
