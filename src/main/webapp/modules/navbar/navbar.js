@@ -16,7 +16,27 @@
         async       : false,
         success: function(data, success) {
             console.log("sign in successfully");
-            console.log(data);
+            console.log("data " +data);
+                swal(
+                    'Oops...',
+                    'Something went wrong!',
+                    'error'
+                );
+            if ($.trim(data) === "failed") {
+                swal(
+                    'Oops...',
+                    'Wrong Email or Password!',
+                    'error'
+                );
+            }else{
+                swal(
+                    'Signed In Successfully',
+                    'Welcome '+data,
+                    'success'
+                );
+            }
+            $('#nav-collapse2').slideToggle();
+
         },
         error : function (jqXHR, textStatus, errorThrown) {
             console.log("error in sign in");

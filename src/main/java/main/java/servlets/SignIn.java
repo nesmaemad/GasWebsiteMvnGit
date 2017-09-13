@@ -32,12 +32,12 @@ public class SignIn extends HttpServlet {
         System.out.println("here inside SignIn Servlet");
         SignInHandler signInHandler = SignInHandler.getInstance();
         try {
-            signInHandler.signIn(request);
+            out.println(signInHandler.signIn(request));
         } catch (Exception ex) {
             Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        out.println("sucess");
+        
         out.close();
     }
 
