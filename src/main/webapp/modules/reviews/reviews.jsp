@@ -1,3 +1,5 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <!--<div ng-include="'navbar.html'"></div>-->
 
 <div class="row">
@@ -30,7 +32,7 @@
       <div class="row">
 
         <section class="content">
-           <h1>Ottawa Residential Propane  Prices</h1>
+           <h1>{{reviews_city.name}} Residential Propane  Prices</h1>
             <div class="row" style="margin-top:40px;">
                 <div class="col-md-8 col-md-push-2">
                     <div class="well well-sm" style="background: rgba(0,151,169 , 0.5)">
@@ -40,11 +42,11 @@
 
                         <div class="row" id="post-review-box" style="display:none;">
                             <div class="col-md-12">
-                                <form accept-charset="UTF-8" action="" method="post">
+                                <form accept-charset="UTF-8"  method="post" id="post_form">
                                     <label class="col-md-4 control-label">Country</label>
                                     <span class="input-group-addon" style="margin-bottom : 20px;">
                                          
-                                         <select name="department" class="form-control selectpicker" ng-model="country"
+                                         <select name="department" class="form-control selectpicker" ng-model="post_review_selected_country"
                                                  ng-change="changeProvincy()" required="true">
                                            <option value="2">America</option>
                                            <option value="1">Canada</option>
@@ -52,12 +54,12 @@
                                          </select>
                                     </span>
 
-                                    <label class="col-md-4 control-label" ng-if = "country == '1'">Province / Territory</label>
-                                    <label class="col-md-4 control-label" ng-if = "country == '2'">State</label>                 
+                                    <label class="col-md-4 control-label" ng-if = "post_review_selected_country == '1'">Province / Territory</label>
+                                    <label class="col-md-4 control-label" ng-if = "post_review_selected_country == '2'">State</label>                 
                                     <span class="input-group-addon" style="margin-bottom : 20px;">
                                         
                                         <select name="department" class="form-control selectpicker"
-                                                ng-options="province.name for province in provinces" ng-model="selected_province" required="true">
+                                                ng-options="province.name for province in provinces" ng-model="post_review_selected_province" required="true">
                                         </select>   
                                     </span>
                                     
@@ -65,12 +67,12 @@
                                                   
                                     <span class="input-group-addon" style="margin-bottom : 20px;">
                                         
-                                        <select class="form-control selectpicker" required>
-                                            <option>Up to 500 liters</option>
-                                            <option>1,000 liters</option>
-                                            <option>2,000 liters</option>
-                                            <option>4,000 liters</option>
-                                            <option>7,000 liters+</option>
+                                        <select class="form-control selectpicker" ng-model="post_review_selected_volume" required>
+                                            <option value="1">Up to 500 liters</option>
+                                            <option value="2">1,000 liters</option>
+                                            <option value="3">2,000 liters</option>
+                                            <option value="4">4,000 liters</option>
+                                            <option value="5">7,000 liters+</option>
                                          
                                         </select>   
                                     </span>
@@ -78,22 +80,27 @@
                                     <label class="col-md-4 control-label">Company</label>
                                                   
                                     <span class="input-group-addon" style="margin-bottom : 20px;">
-                                        
-                                        <select class="form-control selectpicker" required>
-                                            <option>Lo-Cost Propane</option>
-                                            <option>Heritage Propane</option>
-                                            <option>Feeg's Propane</option>
-   
-                                        </select>   
+                                        <select name="company" class="form-control selectpicker"
+                                                ng-options="company.name for company in post_review_companies" ng-model="selected_post_review_company" required="true">
+                                        </select> 
                                     </span>
                                     
+                                    <label class="col-md-4 control-label" ng-if="post_review_selected_country == '2'">Price per Gallon</label>
+                                    <label class="col-md-4 control-label" ng-if="post_review_selected_country == '1'">Price per Litre</label>
+                                    <input type="number" class="form-control animated" id="price" name="price" ng-model="post_review_price" required="true">
                                   
-                                    <input id="ratings-hidden" name="rating" type="hidden"> 
-                                    <textarea class="form-control animated" cols="50" id="new-review" name="comment" 
+                                    <input id="ratings-hidden" name="rating" type="hidden" ng-model="post_review_rating"> 
+                                    <input id="user_id" type="hidden" ng-model="post_review_user_id" 
+                                           value = '<%= session.getAttribute("id") %>'> 
+                                    <label class="col-md-4 control-label" >Review</label>
+                                    <textarea class="form-control animated" cols="50" id="new-review" name="comment" required="true" ng-model="post_review_comment"
                                               placeholder="Enter your review here..." rows="5" style="overflow: scroll; word-wrap: break-word;  height: 100px; margin-top:20px;"></textarea>
 
-                                    <div class="text-right">
+                                    <div class="text-left">
+                                        <label class="col-md-4 control-label">Rating</label>
                                         <div class="stars starrr" data-rating="0"></div>
+                                    </div>
+                                     <div class="text-right">
                                         <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
                                         <span class="glyphicon glyphicon-remove"></span>Cancel</a>
                                         <button class="btn btn-success btn-lg" type="submit">Save</button>
@@ -109,21 +116,21 @@
               <div class="panel-body">
                 <div class="text-center">
                   <div class="btn-group gas_liter">
-                    <button type="button" class="btn btn-danger btn-filter active" >Up to 500 liters</button>
-                    <button type="button" class="btn btn-danger btn-filter" >1,000 liters</button>
-                    <button type="button" class="btn btn-danger btn-filter" >2,000 liters</button>
-                    <button type="button" class="btn btn-danger btn-filter" >4,000 liters</button>
-                    <button type="button" class="btn btn-danger btn-filter" >7,000 liters+</button>
+                    <button type="button" class="btn btn-danger btn-filter active" ng-click ="changeReviewsVolume('1')">Up to 500 liters</button>
+                    <button type="button" class="btn btn-danger btn-filter" ng-click ="changeReviewsVolume('2')">1,000 liters</button>
+                    <button type="button" class="btn btn-danger btn-filter" ng-click ="changeReviewsVolume('3')">2,000 liters</button>
+                    <button type="button" class="btn btn-danger btn-filter" ng-click ="changeReviewsVolume('4')">4,000 liters</button>
+                    <button type="button" class="btn btn-danger btn-filter" ng-click ="changeReviewsVolume('5')">7,000 liters+</button>
                   </div>
                 </div>
                 <div class="table-container">
                   <table class="table table-filter table-responsive">
                     <tbody>
-                      <tr data-status="pagado" class="rowlink">
+                        <tr data-status="pagado" class="rowlink" ng-repeat="review in reviews">
                         <td>
                             <div class="dropdown">
                                 <a class="dropdown-toggle rowlink" data-toggle="dropdown" href="#">
-                                    <h3> Hetco </h3>
+                                    <h3> {{review.company_name}} </h3>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li>
@@ -140,141 +147,19 @@
                             </div>
                         </td>
                         <td>
-                              <div id="stars-existing" class="starrr" data-rating='4'></div>(77 Reviews)
-                              Ottawa
+                              <div id="stars-existing" class="starrr" data-rating="{{review.rating}}" ></div>({{review.reviews_count}} Reviews)
+                              {{review.user_name}}
                         </td>
 
                           <td>
-                          <button type="button" class="btn btn-info">View Price</button>
+                             
+                          <button type="button" class="btn btn-info" id="view_price_{{review.id}}" ng-click="viewPrice(review.id)">View Price</button>
+                          <label id="show_price_{{review.id}}" style="display: none; font-size: 25px; color: rgb(0,151,169)">{{review.price}}</label>
                         </td>
+                    <input type="hidden" id="check_first_name" value = '<%= session.getAttribute("first_name") %>' >
                       </tr>
 
-                      <tr data-status="pagado" class="rowlink">
-                        <td>
-                            <div class="dropdown">
-                                <a class="dropdown-toggle rowlink" data-toggle="dropdown" href="#">
-                                    <h3>Esso</h3>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Review in row2
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Another review in row2
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                          
-                        </td>
-                        <td>
-                              <div id="stars-existing" class="starrr" data-rating='3'></div>
-                              (53 Reviews) Ottawa
-                        </td>
-
-                          <td>
-                          <button type="button" class="btn btn-info">View Price</button>
-                        </td>
-                      </tr>
-
-                      <tr data-status="pagado" class="rowlink">
-                        <td>
-                          
-                            <div class="dropdown">
-                                <a class="dropdown-toggle rowlink" data-toggle="dropdown" href="#">
-                                    <h3>Petro-Canada</h3>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Review in row3
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Another review in row3
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                        <td>
-                              <div id="stars-existing" class="starrr" data-rating='2'></div>
-                              (22 Reviews) Ottawa
-                        </td>
-
-                          <td>
-                          <button type="button" class="btn btn-info">View Price</button>
-                        </td>
-                      </tr>
-
-
-                        <tr data-status="pagado" class="rowlink">
-                        <td>
-                          
-                            <div class="dropdown">
-                                <a class="dropdown-toggle rowlink" data-toggle="dropdown" href="#">
-                                    <h3>Hetco</h3>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Review in row4
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Another review in row4
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                        <td>
-                              <div id="stars-existing" class="starrr" data-rating='1'></div>
-                              (15 Reviews) Ottawa
-                        </td>
-
-                          <td>
-                          <button type="button" class="btn btn-info">View Price</button>
-                        </td>
-                      </tr>
-
-                      <tr data-status="pagado" class="rowlink">
-                        <td>
-                          
-                            <div class="dropdown">
-                                <a class="dropdown-toggle rowlink" data-toggle="dropdown" href="#">
-                                    <h3>Hetco</h3>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Review in row5
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a tabindex="-1" href="#">
-                                            Another review in row5
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                        <td>
-                              <div id="stars-existing" class="starrr" ></div>
-                              (5 Reviews) Ottawa
-                        </td>
-
-                          <td>
-                          <button type="button" class="btn btn-info">View Price</button>
-                        </td>
-                      </tr>
-
-
+                  
       
                     </tbody>
                   </table>
@@ -452,16 +337,28 @@ $(function(){
   var openReviewBtn = $('#open-review-box');
   var closeReviewBtn = $('#close-review-box');
   var ratingsField = $('#ratings-hidden');
+ 
 
   openReviewBtn.click(function(e)
   {
-    reviewBox.slideDown(400, function()
-      {
-        $('#new-review').trigger('autosize.resize');
-        newReview.focus();
-      });
-    openReviewBtn.fadeOut(100);
-    closeReviewBtn.show();
+    var first_name = '<%= session.getAttribute("first_name") %>';
+    console.log("first name is inside opening the review box "+first_name);
+    console.log(first_name);
+    if(first_name !== 'null'){
+        reviewBox.slideDown(400, function()
+          {
+            $('#new-review').trigger('autosize.resize');
+            newReview.focus();
+          });
+        openReviewBtn.fadeOut(100);
+        closeReviewBtn.show();
+    }else{
+        swal(
+            'Oops...',
+            'Please signin before posting!',
+            'error'
+        );
+    }
   });
 
   closeReviewBtn.click(function(e)

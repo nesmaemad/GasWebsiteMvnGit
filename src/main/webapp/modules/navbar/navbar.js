@@ -17,11 +17,7 @@
         success: function(data, success) {
             console.log("sign in successfully");
             console.log("data " +data);
-                swal(
-                    'Oops...',
-                    'Something went wrong!',
-                    'error'
-                );
+
             if ($.trim(data) === "failed") {
                 swal(
                     'Oops...',
@@ -34,6 +30,7 @@
                     'Welcome '+data,
                     'success'
                 );
+               location.reload();
             }
             $('#nav-collapse2').slideToggle();
 

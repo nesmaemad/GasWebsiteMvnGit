@@ -12,6 +12,18 @@
         <servlet-name>SignIn</servlet-name>
         <servlet-class>main.java.servlets.SignIn</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetCompanies</servlet-name>
+        <servlet-class>main.java.servlets.GetCompanies</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetReviews</servlet-name>
+        <servlet-class>main.java.servlets.GetReviews</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PostReview</servlet-name>
+        <servlet-class>main.java.servlets.PostReview</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GetProvinces</servlet-name>
         <url-pattern>/GetProvinces</url-pattern>
@@ -23,6 +35,18 @@
     <servlet-mapping>
         <servlet-name>SignIn</servlet-name>
         <url-pattern>/SignIn</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetCompanies</servlet-name>
+        <url-pattern>/GetCompanies</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetReviews</servlet-name>
+        <url-pattern>/GetReviews</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostReview</servlet-name>
+        <url-pattern>/PostReview</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
